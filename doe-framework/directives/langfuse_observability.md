@@ -98,21 +98,24 @@ In `execution/analyze.py`, make the following changes:
 **At the top of the file:**
 ```python
 from langfuse_client import langfuse, call_claude, flush
+from langfuse import propagate_attributes
 import datetime
 ```
 
-**Wrap the analysis run inside a parent observation trace:**
+**Wrap the analysis run inside a parent observation span:**
 ```python
 run_date = datetime.date.today().isoformat()  # e.g. "2026-08-31"
 
 with langfuse.start_as_current_observation(
-    as_type="trace",
+    as_type="span",
     name="doe_weekly_run",
-    session_id=f"weekly-{run_date}",
-    metadata={"run_date": run_date},
-    tags=["weekly", "doe-framework"],
 ):
-    # Replace every client.messages.create(...) call with call_claude(...)
+    with propagate_attributes(
+        session_id=f"weekly-{run_date}",
+        metadata={"run_date": run_date},
+        tags=["weekly", "doe-framework"],
+    ):
+        # Replace every client.messages.create(...) call with call_claude(...)
 ```
 
 **Replace every `client.messages.create(...)` call** with `call_claude(...)`:

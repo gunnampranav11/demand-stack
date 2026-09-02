@@ -68,7 +68,7 @@ def promote_to_dataset(
 ```
 
 **What it must do:**
-1. Call `langfuse.get_dataset(dataset_name).create_item(input={...}, expected_output=expected_output, metadata=metadata or {})`
+1. Call `langfuse.create_dataset_item(dataset_name=dataset_name, input={...}, expected_output=expected_output, metadata=metadata or {})`
 2. The `input` dict must contain: `{"system": system, "messages": messages, "model": model}`
 3. Return the item ID
 
@@ -139,21 +139,32 @@ Build `execution/evals/run_evals.py`. This is the main eval script - it replays 
 
 1. Initialize the Anthropic client and import `langfuse` from `langfuse_client`
 2. Set `RUN_NAME = f"regression-{os.environ.get('GIT_SHA', 'local')[:8]}"` - this identifies the run in Langfuse
-3. For each dataset in `DATASET_NAMES`:
-   - Call `langfuse.get_dataset(dataset_name)` to get all items
-   - For each item, run `run_single_item(dataset_name, item)`
-4. At the end, print a summary: total passed, total failed
-5. Call `langfuse.flush()` before exiting
-6. Exit with code `1` if any item failed, `0` if all passed - this makes CI fail on regressions
+3. Define a `task` function that takes a dataset `item`, extracts `model`, `system`, `messages` from `item.input`, calls `client.messages.create(...)` directly (not via `call_claude` - this avoids creating production traces during eval runs), and returns the output text
+4. Define four evaluator functions, each accepting `(output, item)` and returning `Evaluation(name=..., value=..., comment=...)`:
+   ```python
+   from langfuse.types import Evaluation
 
-**`run_single_item` must:**
-1. Extract `model`, `system`, `messages` from `item.input`
-2. Call `client.messages.create(...)` directly (not via `call_claude` - this avoids creating production traces during eval runs)
-3. Run all four scorers on the output
-4. Create a Langfuse trace observation named `f"{dataset_name}/{RUN_NAME}"` with `session_id=RUN_NAME` using `with langfuse.start_as_current_observation(as_type="trace", name=..., session_id=...) as trace_obs:`
-5. Log a generation inside the trace context (input, output, token usage)
-6. Attach all four scores using `langfuse.score(trace_id=trace_obs.trace_id, name=..., value=..., comment=...)`
-7. Return a dict: `{"item_id": item.id, "scores": {...}, "passed": bool}`
+   def score_urgency_labels(output, item):
+       value, comment = scorers.check_urgency_labels(output)
+       return Evaluation(name="urgency_labels_valid", value=value, comment=comment)
+
+   def score_required_fields(output, item):
+       value, comment = scorers.check_required_fields(output)
+       return Evaluation(name="required_fields", value=value, comment=comment)
+
+   def score_no_hallucinated_numbers(output, item):
+       value, comment = scorers.check_no_hallucinated_numbers(output, item.input)
+       return Evaluation(name="no_hallucinated_numbers", value=value, comment=comment)
+
+   def score_output_length_stable(output, item):
+       value, comment = scorers.check_output_length_stable(output, item.expected_output)
+       return Evaluation(name="output_length_stable", value=value, comment=comment)
+   ```
+5. Define a `hard_failures` run-evaluator that counts items where any score is below 1.0
+6. For each dataset in `DATASET_NAMES`, call `dataset.run_experiment(name=RUN_NAME, task=task, evaluators=[score_urgency_labels, score_required_fields, score_no_hallucinated_numbers, score_output_length_stable], run_evaluators=[hard_failures])` and accumulate failure counts
+7. Print a summary: total passed, total failed
+8. Call `langfuse.flush()` before exiting
+9. Exit with `sys.exit(1 if total_fails else 0)` - this makes CI fail on regressions
 
 **Score names to use** (must match exactly - Langfuse uses these as metric keys in the dashboard):
 - `urgency_labels_valid`
