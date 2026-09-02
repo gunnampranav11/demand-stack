@@ -1,7 +1,7 @@
 # Competitor Keyword & Ad Audit + Content Gap Analysis
 
 ## Goal
-Every week, scan SERP rankings for all your ICP keywords to see where competitors rank vs. your company. Scrape competitor ad activity on Meta and LinkedIn. Monitor competitor LinkedIn organic posts for messaging themes and engagement. Crawl the top-ranking pages for each ICP keyword to identify content gaps — what type of content ranks, what format it uses, and what you need to create to compete. All competitive intelligence is gathered via Apify actors, not direct APIs.
+Every week, scan SERP rankings for all your ICP keywords to see where competitors rank vs. your company. Scrape competitor ad activity on Meta and LinkedIn. Monitor competitor LinkedIn organic posts for messaging themes and engagement. Crawl the top-ranking pages for each ICP keyword to identify content gaps - what type of content ranks, what format it uses, and what you need to create to compete. All competitive intelligence is gathered via Apify actors, not direct APIs.
 
 ---
 
@@ -23,16 +23,16 @@ Every week, scan SERP rankings for all your ICP keywords to see where competitor
 - Used for: Competitor ad activity on Meta/Facebook/Instagram
 
 **3. LinkedIn Ads Scraper**
-- Actor ID: `[YOUR_LINKEDIN_ADS_ACTOR_ID]` — search Apify Store for "LinkedIn ad library scraper" and use the current best-rated option. As of May 2026: `silva95gustavo/linkedin-ad-library-scraper`
+- Actor ID: `[YOUR_LINKEDIN_ADS_ACTOR_ID]` - search Apify Store for "LinkedIn ad library scraper" and use the current best-rated option. As of May 2026: `silva95gustavo/linkedin-ad-library-scraper`
 - Used for: Competitor LinkedIn paid ad activity
 
 **4. LinkedIn Posts Scraper**
-- Actor ID: `[YOUR_LINKEDIN_POSTS_ACTOR_ID]` — search Apify Store for "LinkedIn company posts scraper" and use the current best-rated option. As of May 2026: `harvestapi/linkedin-company-posts`
+- Actor ID: `[YOUR_LINKEDIN_POSTS_ACTOR_ID]` - search Apify Store for "LinkedIn company posts scraper" and use the current best-rated option. As of May 2026: `harvestapi/linkedin-company-posts`
 - Used for: Competitor LinkedIn organic post content and engagement
 
 **5. Website Content Crawler**
 - Actor ID: `apify/website-content-crawler`
-- Used for: Content gap analysis — crawling top-ranking pages to analyze content type, structure, and format
+- Used for: Content gap analysis - crawling top-ranking pages to analyze content type, structure, and format
 
 **6. Competitor lists**
 - Source: `config/competitor_lists.py`
@@ -49,7 +49,7 @@ Run the Google Search Scraper for all your ICP keywords (defined in `config/icp_
 - Country: United States (adjust for your target market)
 - Language: English
 - Results per page: 10
-- Max pages: 2 (to capture positions 1–20)
+- Max pages: 2 (to capture positions 1-20)
 
 **Your ICP keyword list:**
 <!-- Replace with your actual ICP keywords, organized by vertical -->
@@ -139,7 +139,7 @@ Generic keyword searches (replace with your own ICP keywords):
 **What to do:**
 Run the LinkedIn Ads Scraper (`[YOUR_LINKEDIN_ADS_ACTOR_ID]`) for each competitor plus your own company.
 
-**Search list (company names — replace with your actual competitors):**
+**Search list (company names - replace with your actual competitors):**
 - [COMPETITOR_1]
 - [COMPETITOR_2]
 - [COMPETITOR_3]
@@ -204,7 +204,7 @@ Run the LinkedIn Posts Scraper (`[YOUR_LINKEDIN_POSTS_ACTOR_ID]`) for each compe
 **Why this matters:** For each ICP keyword, the pages that rank on page 1 tell you what Google considers the best content for that query. Understanding the content format, structure, and angle of top-ranking pages reveals what you need to create to compete.
 
 **What to do:**
-1. From the SERP results in Step 1, take the top 3 organic results for each non-brand ICP keyword (skip competitor brand keywords — content gap analysis does not apply to branded searches)
+1. From the SERP results in Step 1, take the top 3 organic results for each non-brand ICP keyword (skip competitor brand keywords - content gap analysis does not apply to branded searches)
 2. Run the Website Content Crawler (`apify/website-content-crawler`) on each of those top-ranking URLs
 3. For each crawled page, extract:
    - URL
@@ -271,10 +271,10 @@ Using `config/competitor_lists.py`, tag every SERP result, ad, and LinkedIn post
 
 ## Edge Cases and Notes
 
-- **Apify costs:** The Google Search Scraper runs all your ICP keywords × 2 pages per keyword per week. The Website Content Crawler adds cost for the content gap crawl. Facebook and LinkedIn ad scrapers cost approximately $2.50/week combined. LinkedIn Posts Scraper depends on company count. Estimate total for this module at approximately $4–6/week depending on keyword count.
+- **Apify costs:** The Google Search Scraper runs all your ICP keywords × 2 pages per keyword per week. The Website Content Crawler adds cost for the content gap crawl. Facebook and LinkedIn ad scrapers cost approximately $2.50/week combined. LinkedIn Posts Scraper depends on company count. Estimate total for this module at approximately $4-6/week depending on keyword count.
 - **Rate limiting:** Apify handles rate limiting internally. If an actor run fails, retry once after 60 seconds. If it fails again, log the error and continue with the data that was collected.
 - **Content Crawler failures:** Some pages may block crawling (e.g., Cloudflare protection, login walls). If a page fails to crawl, log it as "blocked" and skip. The analysis layer works with whatever content was successfully crawled.
-- **LinkedIn Posts Scraper — company discovery:** For competitors where only the company name is known (not the LinkedIn URL), the script should search for the company by name using the actor's search functionality. If multiple results are returned, select the one with the most followers or the verified company page. Cache discovered LinkedIn URLs in `.tmp/linkedin_company_urls.json` so they don't need to be re-discovered each week.
+- **LinkedIn Posts Scraper - company discovery:** For competitors where only the company name is known (not the LinkedIn URL), the script should search for the company by name using the actor's search functionality. If multiple results are returned, select the one with the most followers or the verified company page. Cache discovered LinkedIn URLs in `.tmp/linkedin_company_urls.json` so they don't need to be re-discovered each week.
 - **Competitor list changes:** If competitors are added or removed from `config/competitor_lists.py`, the script automatically picks them up on the next run. No code changes needed.
 - **Duplicate competitors:** Some competitors may appear in multiple sub-vertical lists. The SERP tagging in Step 6 handles this by assigning multiple tags.
 - **First run:** No previous snapshots exist for SERP, Meta ads, LinkedIn ads, or LinkedIn posts. Save current state and skip all change detection.
@@ -284,5 +284,5 @@ Using `config/competitor_lists.py`, tag every SERP result, ad, and LinkedIn post
 
 ## Scripts This Directive Feeds
 
-- `execution/competitor_serp_scan.py` — Steps 1 through 6 (SERP scanning, Meta ad library, LinkedIn ad library, LinkedIn posts, website content crawling, and snapshot tracking)
-- `execution/analyze.py` — Content gap classification (Step 5 analysis), LinkedIn posts analysis, and all reporting
+- `execution/competitor_serp_scan.py` - Steps 1 through 6 (SERP scanning, Meta ad library, LinkedIn ad library, LinkedIn posts, website content crawling, and snapshot tracking)
+- `execution/analyze.py` - Content gap classification (Step 5 analysis), LinkedIn posts analysis, and all reporting

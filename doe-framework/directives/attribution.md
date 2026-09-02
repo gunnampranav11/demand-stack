@@ -7,7 +7,7 @@ Every week, pull all deal and contact data from HubSpot across all pipelines. Tr
 
 ## When This Runs
 - **Frequency:** Weekly (every Sunday as part of the main orchestrator)
-- **Data window:** Two pulls — last 7 days for new activity, plus all open deals regardless of date
+- **Data window:** Two pulls - last 7 days for new activity, plus all open deals regardless of date
 - **Output:** Structured data saved to `.tmp/` for the analysis layer (`directives/weekly_report.md` → `execution/analyze.py`)
 
 ---
@@ -35,16 +35,16 @@ Never hardcode pipeline or stage names. Discover dynamically each run.
 5. Save current state as `.tmp/hubspot_pipeline_snapshot.json`
 6. On first run, save snapshot and skip change detection
 
-**Known pipelines and stage IDs (for reference only — script discovers dynamically):**
+**Known pipelines and stage IDs (for reference only - script discovers dynamically):**
 <!-- Replace with your own pipeline and stage IDs. These are examples only. -->
 <!-- The script uses IDs, not names, for all comparisons. -->
 <!-- Find your stage IDs in HubSpot: Settings → CRM → Pipelines → Edit pipeline → inspect stage IDs via API -->
 <!--
 Pipeline: [Your Pipeline Name]
-  Stage: [Stage Name 1] — ID: [replace with your stage ID]
-  Stage: [Stage Name 2] — ID: [replace with your stage ID]
-  Stage: Closed Won      — ID: [replace with your stage ID]
-  Stage: Closed Lost     — ID: [replace with your stage ID]
+  Stage: [Stage Name 1] - ID: [replace with your stage ID]
+  Stage: [Stage Name 2] - ID: [replace with your stage ID]
+  Stage: Closed Won      - ID: [replace with your stage ID]
+  Stage: Closed Lost     - ID: [replace with your stage ID]
 -->
 
 ---
@@ -95,8 +95,8 @@ This captures:
 - Everything from Step 2, plus:
 - Deal amount (actual closed revenue)
 - Time from create date to close date (sales cycle length in days)
-- Original source (first touch attribution — see Step 6)
-- All sources in the journey (multi-touch — see Step 6)
+- Original source (first touch attribution - see Step 6)
+- All sources in the journey (multi-touch - see Step 6)
 
 **Save to:** `.tmp/hubspot_won_deals.csv`
 
@@ -151,7 +151,7 @@ Using `config/icp_taxonomy.py`, score every new contact:
 - **Tier 1 (ICP match):** Job title matches target titles AND company employee count meets minimum threshold AND company industry or deal context matches a target vertical
 - **Tier 2 (Adjacent):** Matches 2 of the 3 criteria above
 - **Tier 3 (Weak fit):** Matches 1 of the 3 criteria
-- **Unqualified:** Matches 0 — consumer, student, competitor, or no relevant use case
+- **Unqualified:** Matches 0 - consumer, student, competitor, or no relevant use case
 
 **Save the ICP tier as a column in:** `.tmp/hubspot_new_contacts.csv`
 
@@ -192,7 +192,7 @@ Using `config/icp_taxonomy.py`, score every new contact:
 - **Association API:** To get company and contact details for each deal, use the HubSpot Associations API (v4). Pull deal-to-company and deal-to-contact associations separately, then join.
 - **Property history:** To detect stage changes, use the `propertiesWithHistory` parameter on the deals endpoint with `dealstage` included. This returns the full history of stage changes with timestamps.
 - **Rate limits:** HubSpot private apps allow 100 requests per 10 seconds. Include a small delay between paginated requests (0.2 seconds).
-- **Deal stage IDs:** Always query using internal stage IDs, never display labels. Labels can be renamed without changing the ID — using the ID is the only reliable approach.
+- **Deal stage IDs:** Always query using internal stage IDs, never display labels. Labels can be renamed without changing the ID - using the ID is the only reliable approach.
 - **Multiple pipelines:** If you have more than one pipeline (e.g., a qualification pipeline and a sales pipeline), pull from both. Track cross-pipeline movement.
 - **Calendly or integration contacts:** If a contact's source is `INTEGRATION`, check `hs_object_source_label` to identify which integration created them.
 - **First run:** No previous pipeline snapshot exists. Save current state and skip change detection.
@@ -201,5 +201,5 @@ Using `config/icp_taxonomy.py`, score every new contact:
 
 ## Scripts This Directive Feeds
 
-- `execution/hubspot_pull.py` — Steps 1 through 6
-- `execution/analyze.py` — Step 7 and the analysis layer
+- `execution/hubspot_pull.py` - Steps 1 through 6
+- `execution/analyze.py` - Step 7 and the analysis layer

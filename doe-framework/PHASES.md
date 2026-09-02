@@ -7,14 +7,14 @@ This guide walks you through building the full automation from scratch. No prior
 | 1 | Folder + GitHub setup | 10 min | No - terminal commands only |
 | 2 | Build ICP config files | 1 hr | Claude Code does it |
 | 3 | Write all 12 directives | 1 day | No - written in chat |
-| 4 | Get all API keys | 2–7 days | No - web forms |
+| 4 | Get all API keys | 2-7 days | No - web forms |
 | 5 | Build execution scripts | 2-3 days | Claude Code does it |
 | 6 | Test each module | 2 days | Claude Code does it |
 | 7 | Connect everything (main.py) | 1 day | Claude Code does it |
 | 8 | Deploy to Modal + first test | 1 hour | Claude Code does it |
 | 9 | Go live | Done | Runs automatically |
 
-> **Start Phase 4 on Day 1 in parallel with Phase 3.** Google Ads Developer Token and LinkedIn Marketing API both require approval that can take 3–7 days. Don't wait until Phase 3 is done to start them.
+> **Start Phase 4 on Day 1 in parallel with Phase 3.** Google Ads Developer Token and LinkedIn Marketing API both require approval that can take 3-7 days. Don't wait until Phase 3 is done to start them.
 
 ---
 
@@ -158,9 +158,9 @@ Get these in parallel with Phase 3. Add each key to your `.env` file as you rece
 | 1 | Google Cloud Project + Service Account | Easy | 20 min | Covers GSC, GA4, Google Ads |
 | 2 | Google Search Console Access | Easy | 10 min | Add service account email as user - it's the `client_email` field in your downloaded `service-account.json` |
 | 3 | GA4 Access | Easy | 10 min | Add service account email as viewer - same `client_email` value |
-| 4 | Google Ads Developer Token | Medium | **1–3 day wait** | **START THIS ON DAY 1** |
+| 4 | Google Ads Developer Token | Medium | **1-3 day wait** | **START THIS ON DAY 1** |
 | 5 | Meta Marketing API | Medium | 30 min | System user + token |
-| 6 | LinkedIn Marketing API | Medium | **3–7 day wait** | **START THIS ON DAY 1** |
+| 6 | LinkedIn Marketing API | Medium | **3-7 day wait** | **START THIS ON DAY 1** |
 | 7 | Apify Account + API Token | Easy | 20 min | Start on Free plan, upgrade to Starter before Phase 6 |
 | 8 | Anthropic API Key | Easy | 10 min | Usage-based billing |
 | 9 | CRM Private App (HubSpot or equivalent) | Easy | 15 min | Read access to CRM objects |
@@ -258,7 +258,7 @@ Verify the PDF is generated and delivered to Slack.
 
 ## Phase 8 - Deploy to Modal
 
-Modal runs your automation on a schedule in the cloud for ~$2–5/month.
+Modal runs your automation on a schedule in the cloud for ~$2-5/month.
 
 **Step 1:** Install Modal and create an account:
 ```bash
@@ -296,7 +296,7 @@ Verify the report arrives in your Slack channel.
 
 The automation runs on schedule. No action required.
 
-Monitor the first few runs to verify output quality. After 2–3 weeks you'll have enough data for week-over-week comparisons to start working. That's when the report becomes genuinely actionable.
+Monitor the first few runs to verify output quality. After 2-3 weeks you'll have enough data for week-over-week comparisons to start working. That's when the report becomes genuinely actionable.
 
 **Known gaps to add in a Phase 2 expansion:**
 - Backlink data (requires Ahrefs or SEMrush API, ~$99+/month) - explains WHY competitors outrank you, not just that they do

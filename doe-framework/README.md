@@ -8,7 +8,7 @@ The framework is designed so that Claude Code acts as the orchestrator: it reads
 
 | Directive | What It Does |
 |---|---|
-| `keyword_intelligence.md` | Pulls Google Ads, GSC, and GA4 keyword data weekly. Scores every keyword against your ICP. Flags wasted spend on non-ICP terms and identifies page 2 recovery opportunities (positions 11–20 with high impressions). |
+| `keyword_intelligence.md` | Pulls Google Ads, GSC, and GA4 keyword data weekly. Scores every keyword against your ICP. Flags wasted spend on non-ICP terms and identifies page 2 recovery opportunities (positions 11-20 with high impressions). |
 | `attribution.md` | Pulls all HubSpot deal and contact data. Maps every deal back to its original lead source (organic, paid, LinkedIn, Meta, direct, referral). Tracks pipeline velocity and stage movements. |
 | `lead_scoring.md` | Pulls LinkedIn Ads and Meta Ads campaign performance and lead gen data. Cross-references every lead with HubSpot. Scores each lead against your ICP taxonomy (Tier 1/2/3/Unqualified). |
 | `competitor_audit.md` | Scans SERP rankings for all your ICP keywords. Scrapes competitor ads on Meta and LinkedIn. Monitors competitor LinkedIn organic posts. Crawls top-ranking pages to identify content gaps. |
@@ -69,7 +69,7 @@ The framework's architecture works with any tool - the directives are just SOPs.
 | Slack API | Delivering the weekly report PDF to a channel | https://api.slack.com |
 | Langfuse | Observability and evals - traces every Claude call, tracks cost/latency, and runs regression tests on your analysis outputs | https://langfuse.com |
 
-## Weekly Cost Estimate As of May 2026 (* Subject to change depending on Apify actor policies. Please note some Apify scrapers may not work too since they are constantly changing. Make sure to run tests before deploying.*)
+## Weekly Cost Estimate As of August 2026 (* Subject to change depending on Apify actor policies. Please note some Apify scrapers may not work too since they are constantly changing. Make sure to run tests before deploying.*)
 
 | Component | Cost/Week |
 |---|---|

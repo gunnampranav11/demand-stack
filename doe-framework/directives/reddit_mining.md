@@ -1,7 +1,7 @@
 # Reddit Pain-Point Mining + Review Sentiment
 
 ## Goal
-Every week, mine Reddit for pain-point discussions related to your product category and ICP verticals — surfacing real buyer language and unmet needs. This module captures the voice of the buyer and the voice of the market.
+Every week, mine Reddit for pain-point discussions related to your product category and ICP verticals - surfacing real buyer language and unmet needs. This module captures the voice of the buyer and the voice of the market.
 
 ---
 
@@ -34,7 +34,7 @@ Every week, mine Reddit for pain-point discussions related to your product categ
 Run the Reddit Scraper Lite (`trudax/reddit-scraper-lite`) on each target subreddit, searching for relevant keywords within each. Pull posts and comments from the last 7 days.
 
 **Subreddit list:**
-<!-- These subreddits are generic enough to be broadly applicable — adjust for your specific industry. -->
+<!-- These subreddits are generic enough to be broadly applicable - adjust for your specific industry. -->
 <!-- Add or remove subreddits based on where your buyers spend time. -->
 
 Industry / problem-domain subreddits:
@@ -61,10 +61,10 @@ Vertical-specific subreddits (add based on your ICP verticals):
 <!-- - OCR automation -->
 <!-- - invoice automation -->
 <!-- - manual data entry -->
-- [keyword 1 — your product category]
-- [keyword 2 — buyer pain point]
-- [keyword 3 — industry pain point]
-- [keyword 4 — competitor category name]
+- [keyword 1 - your product category]
+- [keyword 2 - buyer pain point]
+- [keyword 3 - industry pain point]
+- [keyword 4 - competitor category name]
 
 **For each result, record:**
 - Subreddit name
@@ -102,7 +102,7 @@ Run Reddit-wide searches for competitor names to find discussions where people m
 - Post date
 - Post URL
 - Upvotes
-- Sentiment: positive, negative, neutral, or comparison (the analysis layer will classify this — the scraper just pulls the raw text)
+- Sentiment: positive, negative, neutral, or comparison (the analysis layer will classify this - the scraper just pulls the raw text)
 
 **Compare against previous week's snapshot (stored in `.tmp/reddit_mentions_snapshot.json`):**
 - Flag any competitor with a spike in mentions (more than 2x their average weekly mentions)
@@ -162,5 +162,5 @@ Using `config/icp_taxonomy.py`, tag each Reddit post/comment with the most relev
 
 ## Scripts This Directive Feeds
 
-- `execution/reddit_scrape.py` — Steps 1 and 2
-- `execution/analyze.py` — Step 3 (tagging) and all analysis layer reporting
+- `execution/reddit_scrape.py` - Steps 1 and 2
+- `execution/analyze.py` - Step 3 (tagging) and all analysis layer reporting

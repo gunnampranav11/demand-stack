@@ -1,7 +1,7 @@
 # Meeting Booking Funnel
 
 ## Goal
-Every week, pull all Calendly meeting data to track the full booking funnel — from scheduled to completed to no-show. Cross-reference with HubSpot to connect meetings to deals, lead sources, and meeting outcomes. Identify which event types, which reps, and which lead sources produce the most completed meetings. Surface no-show patterns and booking drop-offs.
+Every week, pull all Calendly meeting data to track the full booking funnel - from scheduled to completed to no-show. Cross-reference with HubSpot to connect meetings to deals, lead sources, and meeting outcomes. Identify which event types, which reps, and which lead sources produce the most completed meetings. Surface no-show patterns and booking drop-offs.
 
 ---
 
@@ -35,14 +35,14 @@ Before pulling any data, the script must get the organization URI and all user U
 2. Call `GET /organization_memberships` with the organization URI to get all team members' user URIs
 3. Store these URIs for use in subsequent steps
 
-**This step is essential — Calendly API endpoints require `user` or `organization` URI parameters. Without them, all other calls will fail.**
+**This step is essential - Calendly API endpoints require `user` or `organization` URI parameters. Without them, all other calls will fail.**
 
 ---
 
 ## Step 2: Pull All Event Types
 
 **What to do:**
-Call the Calendly API and pull all event types across the organization. This discovers all meeting types dynamically — never hardcode event type names.
+Call the Calendly API and pull all event types across the organization. This discovers all meeting types dynamically - never hardcode event type names.
 
 **For each event type, record:**
 - Event type name
@@ -52,7 +52,7 @@ Call the Calendly API and pull all event types across the organization. This dis
 - Owner (which team member)
 - Whether it's an individual or shared/round-robin event type
 
-**Known event types (for reference only — script discovers dynamically):**
+**Known event types (for reference only - script discovers dynamically):**
 <!-- Replace with your own event types as documentation. The script discovers these dynamically. -->
 <!-- Example format: -->
 <!-- - [Rep Name]: 30 minute meeting, schedule a demo, pricing call -->
@@ -75,8 +75,8 @@ Call the Calendly API and pull all scheduled events (meetings) created or occurr
 - Duration (minutes)
 - Host name (the rep)
 - Created at timestamp (when the booking was made)
-- Cancellation reason (if canceled — available in the cancellation object)
-- UTM parameters (if captured — utm_source, utm_medium, utm_campaign can reveal which ad or page drove the booking)
+- Cancellation reason (if canceled - available in the cancellation object)
+- UTM parameters (if captured - utm_source, utm_medium, utm_campaign can reveal which ad or page drove the booking)
 
 **For each event, also pull the invitee details** (via the invitees endpoint for each event):
 - Invitee name
@@ -93,7 +93,7 @@ Calendly's API does NOT have a "completed" status. Events are either `active` or
 - **Canceled:** Event status is `canceled`
 - **Rescheduled:** Event status is `canceled` AND a new event exists with the same invitee email. Tag as "rescheduled" rather than "canceled" to avoid double-counting.
 
-**Also pull events from the previous 7–14 days that may have had status updates** (e.g., a meeting booked 10 days ago that was marked as no-show this week). This ensures status changes are captured even for meetings booked in prior weeks.
+**Also pull events from the previous 7-14 days that may have had status updates** (e.g., a meeting booked 10 days ago that was marked as no-show this week). This ensures status changes are captured even for meetings booked in prior weeks.
 
 **Save to:** `.tmp/calendly_events.csv`
 
@@ -109,19 +109,19 @@ For each Calendly invitee, look up the contact in HubSpot by email address.
 - Lifecycle stage
 - Lead status
 - Original source (`hs_analytics_source` + drill-downs)
-- Associated deal (if any) — deal ID, deal name, deal stage, deal amount, pipeline
+- Associated deal (if any) - deal ID, deal name, deal stage, deal amount, pipeline
 - Company name (from HubSpot)
 - Company employee count
 - Company industry
-- ICP tier (if already scored by `directives/attribution.md` or `directives/lead_scoring.md` — check `.tmp/hubspot_new_contacts.csv` or `.tmp/linkedin_leads.csv` / `.tmp/meta_leads.csv`)
+- ICP tier (if already scored by `directives/attribution.md` or `directives/lead_scoring.md` - check `.tmp/hubspot_new_contacts.csv` or `.tmp/linkedin_leads.csv` / `.tmp/meta_leads.csv`)
 
 **Also check HubSpot meeting outcome as a supplementary data source:**
 Search HubSpot MEETING_EVENT objects for meetings with titles starting with "Calendly:" that match the event's time and invitee. HubSpot tracks `hs_meeting_outcome` values including `COMPLETED` and `SCHEDULED`. If the Calendly-inferred status and HubSpot outcome disagree, prefer HubSpot's `hs_meeting_outcome` since it may have been manually updated by the rep.
 
 **What to flag:**
-- **Has deal:** Meeting invitee has an associated deal — this meeting is part of an active sales process
-- **No deal:** Meeting invitee is in HubSpot but has no deal — potential new opportunity
-- **New to CRM:** Meeting invitee's email is not in HubSpot — may indicate a sync issue
+- **Has deal:** Meeting invitee has an associated deal - this meeting is part of an active sales process
+- **No deal:** Meeting invitee is in HubSpot but has no deal - potential new opportunity
+- **New to CRM:** Meeting invitee's email is not in HubSpot - may indicate a sync issue
 - **Meeting source:** Map the lead's original source to understand which channel drove the meeting
 
 **Save to:** `.tmp/calendly_hubspot_match.csv`
@@ -193,7 +193,7 @@ On first run, save snapshot and skip change detection.
 | File | Contents |
 |---|---|
 | `.tmp/calendly_event_types.csv` | All event types across the organization |
-| `.tmp/calendly_events.csv` | All events from the last 7–14 days with status, invitee details, and completion status |
+| `.tmp/calendly_events.csv` | All events from the last 7-14 days with status, invitee details, and completion status |
 | `.tmp/calendly_hubspot_match.csv` | HubSpot cross-reference for each invitee |
 | `.tmp/calendly_funnel_metrics.csv` | Funnel metrics: overall, per rep, per event type, per source |
 | `.tmp/calendly_snapshot.json` | Current funnel state for next week's comparison |
@@ -209,7 +209,7 @@ On first run, save snapshot and skip change detection.
 - **Event type performance:** Which meeting types drive the most bookings? Which have the worst no-show rates?
 - **Source-to-meeting mapping:** Which channels produce meetings? Breakdown by paid search, organic, LinkedIn, Meta, direct, referral
 - **Meeting-to-deal connection:** How many meetings this week were tied to existing deals vs. net-new?
-- **No-show analysis:** Specific patterns — are certain days/times worse for no-shows? Are certain sources worse?
+- **No-show analysis:** Specific patterns - are certain days/times worse for no-shows? Are certain sources worse?
 - **Week-over-week trend:** Is meeting volume growing or shrinking? Is completion rate improving?
 
 **For Section 3 (Cross-Vertical Summary):**
@@ -222,14 +222,14 @@ On first run, save snapshot and skip change detection.
 
 ## Edge Cases and Notes
 
-- **Calendly API requires user/organization URIs:** Every Calendly API call (except `GET /users/me`) requires either a `user` or `organization` URI parameter. Step 1 must run first to retrieve these. If Step 1 fails, the entire module should log the error and skip — do not proceed with hardcoded URIs.
+- **Calendly API requires user/organization URIs:** Every Calendly API call (except `GET /users/me`) requires either a `user` or `organization` URI parameter. Step 1 must run first to retrieve these. If Step 1 fails, the entire module should log the error and skip - do not proceed with hardcoded URIs.
 - **Calendly API pagination:** The scheduled events endpoint paginates. The script must handle pagination using the `next_token` or `pagination` object returned in each response. Continue pulling until all events are retrieved.
 - **Calendly API rate limits:** Calendly's API has rate limits (varies by plan). If rate-limited, wait and retry. For weekly pulls of a typical B2B org's meeting volume, this should not be an issue.
-- **Organization-wide access:** The API token should have `organizations:read` scope, which returns events across all team members — not just the token owner's events. Verify this during testing.
+- **Organization-wide access:** The API token should have `organizations:read` scope, which returns events across all team members - not just the token owner's events. Verify this during testing.
 - **Calendly does NOT have a "completed" event status:** The API only supports `active` and `canceled`. Completion must be inferred from event timing and no-show status (see Step 3). HubSpot's `hs_meeting_outcome` field provides a supplementary check.
 - **No-show marking:** No-shows must be manually marked in Calendly by the host (or automatically if configured). If hosts don't consistently mark no-shows, the no-show data will be incomplete. The analysis layer should note this limitation.
 - **Rescheduled meetings:** Calendly treats rescheduled meetings as a cancellation of the original + creation of a new event. The script should detect rescheduled meetings (same invitee email, canceled event followed by new event) and tag them as "rescheduled" to avoid double-counting.
-- **UTM parameter availability:** UTM data is only captured if the Calendly booking page URL includes UTM parameters. Many bookings will not have UTM data — this is normal. The HubSpot cross-reference is the primary source attribution; UTMs are supplementary.
+- **UTM parameter availability:** UTM data is only captured if the Calendly booking page URL includes UTM parameters. Many bookings will not have UTM data - this is normal. The HubSpot cross-reference is the primary source attribution; UTMs are supplementary.
 - **ICP scoring:** This module does not re-score leads for ICP fit. It relies on ICP scores already calculated by `directives/attribution.md` and `directives/lead_scoring.md`. If a meeting invitee's email matches a contact in those outputs, pull the existing ICP tier.
 - **First run:** No previous snapshot exists. Save current state and skip week-over-week comparison.
 
@@ -237,5 +237,5 @@ On first run, save snapshot and skip change detection.
 
 ## Scripts This Directive Feeds
 
-- `execution/meeting_funnel_pull.py` — Steps 1, 2, 3, 4, 5, and 6
-- `execution/analyze.py` — All reporting
+- `execution/meeting_funnel_pull.py` - Steps 1, 2, 3, 4, 5, and 6
+- `execution/analyze.py` - All reporting

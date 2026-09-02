@@ -1,7 +1,7 @@
 # Keyword Intelligence + Page 2 Recovery
 
 ## Goal
-Every week, pull all keyword performance data from Google Ads, Google Search Console, and GA4. Score every keyword against the ICP taxonomy. Identify page 2 recovery opportunities (keywords ranking positions 11–20 with high impressions). Flag wasted spend on non-ICP keywords. Detect any new or reactivated campaigns automatically.
+Every week, pull all keyword performance data from Google Ads, Google Search Console, and GA4. Score every keyword against the ICP taxonomy. Identify page 2 recovery opportunities (keywords ranking positions 11-20 with high impressions). Flag wasted spend on non-ICP keywords. Detect any new or reactivated campaigns automatically.
 
 ---
 
@@ -16,7 +16,7 @@ Every week, pull all keyword performance data from Google Ads, Google Search Con
 
 **1. Google Ads API**
 - Account ID: `[YOUR_GOOGLE_ADS_ACCOUNT_ID]`
-- Account type: Managed under MCC `[YOUR_MCC_ID]` (if applicable — remove if not using an MCC)
+- Account type: Managed under MCC `[YOUR_MCC_ID]` (if applicable - remove if not using an MCC)
 - Conversion actions to track: replace with your actual conversion action names from Google Ads
 
 **2. Google Search Console API**
@@ -36,7 +36,7 @@ Every week, pull all keyword performance data from Google Ads, Google Search Con
 Before pulling keyword data, the script must discover the current state of all campaigns. Never hardcode campaign names.
 
 **What to do:**
-1. Call the Google Ads API and pull ALL campaigns in the account (active, paused, removed — everything)
+1. Call the Google Ads API and pull ALL campaigns in the account (active, paused, removed - everything)
 2. For each campaign, record: campaign name, campaign ID, status (ENABLED / PAUSED / REMOVED), campaign type, budget, start date
 3. Compare against the previous week's campaign list (stored in `.tmp/campaign_snapshot.json`)
 4. Flag and report:
@@ -47,7 +47,7 @@ Before pulling keyword data, the script must discover the current state of all c
 5. Save the current campaign list as the new `.tmp/campaign_snapshot.json` for next week's comparison
 6. On first run (no previous snapshot exists), treat all ENABLED campaigns as current and save the snapshot without flagging changes
 
-**Known active campaigns (for reference only — script discovers dynamically):**
+**Known active campaigns (for reference only - script discovers dynamically):**
 <!-- Replace with your own campaign names as a reference. The script never relies on these. -->
 - [Campaign 1 name]
 - [Campaign 2 name]
@@ -74,7 +74,7 @@ Before pulling keyword data, the script must discover the current state of all c
 
 **Filters:**
 - Date range: last 7 days
-- Include all ENABLED campaigns (not just the known ones — use the dynamic list from Step 1)
+- Include all ENABLED campaigns (not just the known ones - use the dynamic list from Step 1)
 - Include keywords with 0 impressions (they may indicate paused keywords or match type issues)
 - Also pull last 7 days of keyword data for any campaign flagged as newly paused in Step 1
 
@@ -95,14 +95,14 @@ Before pulling keyword data, the script must discover the current state of all c
 **Filters:**
 - Property: `https://[YOUR_DOMAIN]`
 - Date range: last 7 days
-- All queries (no filters — pull everything)
+- All queries (no filters - pull everything)
 
 **Page 2 recovery identification:**
 After pulling all data, flag any query where:
 - Average position is between 11.0 and 20.0 (page 2)
 - Impressions are 50 or more in the 7-day window
 
-These are recovery opportunities — keywords that are close to page 1 but not there yet.
+These are recovery opportunities - keywords that are close to page 1 but not there yet.
 
 **Save to:** `.tmp/gsc_keywords.csv`
 
@@ -186,16 +186,16 @@ Cross-vertical:
 
 - **First run:** No previous snapshot exists. Save current state and skip campaign change detection. No week-over-week trends available.
 - **API rate limits:** Google Ads API has a limit of 15,000 requests per day for basic access. A single weekly pull will use far less than this. If rate-limited, wait 60 seconds and retry.
-- **GSC data delay:** GSC data is typically delayed by 2–3 days. The 7-day window accounts for this, but the most recent 2 days may show incomplete data. This is acceptable.
+- **GSC data delay:** GSC data is typically delayed by 2-3 days. The 7-day window accounts for this, but the most recent 2 days may show incomplete data. This is acceptable.
 - **Zero-impression keywords:** Keep them in the output. They indicate paused keywords or match type issues that the analysis layer should surface.
 - **Campaign names may change:** Never rely on campaign names for logic. Always use campaign IDs for tracking and comparison. Names are for display only.
-- **GA4 event name spacing:** Some GA4 event names may have unusual spacing or formatting — use exact strings as configured in your GA4 property. Do not normalize.
+- **GA4 event name spacing:** Some GA4 event names may have unusual spacing or formatting - use exact strings as configured in your GA4 property. Do not normalize.
 
 ---
 
 ## Scripts This Directive Feeds
 
-- `execution/google_ads_pull.py` — Steps 1 and 2
-- `execution/gsc_pull.py` — Step 3
-- `execution/ga4_pull.py` — Step 4
-- `execution/analyze.py` — Steps 5, 6, and the analysis layer
+- `execution/google_ads_pull.py` - Steps 1 and 2
+- `execution/gsc_pull.py` - Step 3
+- `execution/ga4_pull.py` - Step 4
+- `execution/analyze.py` - Steps 5, 6, and the analysis layer

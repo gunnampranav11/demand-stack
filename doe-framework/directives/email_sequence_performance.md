@@ -1,7 +1,7 @@
 # Email Sequence Performance
 
 ## Goal
-Every week, pull all email sequence activity from HubSpot to track how outbound sales sequences are performing. Measure sends, opens, replies, and bounces per sequence and per step. Give priority attention to your primary ad-lead enrollment sequence. Identify which sequences and which email steps drive the most replies. Flag sequences with poor open or reply rates. All data is pulled from HubSpot's CRM API using EMAIL objects and contact sequence properties — no separate Sequences API endpoint is needed.
+Every week, pull all email sequence activity from HubSpot to track how outbound sales sequences are performing. Measure sends, opens, replies, and bounces per sequence and per step. Give priority attention to your primary ad-lead enrollment sequence. Identify which sequences and which email steps drive the most replies. Flag sequences with poor open or reply rates. All data is pulled from HubSpot's CRM API using EMAIL objects and contact sequence properties - no separate Sequences API endpoint is needed.
 
 ---
 
@@ -28,7 +28,7 @@ Every week, pull all email sequence activity from HubSpot to track how outbound 
 <!-- Replace with your primary ad-lead enrollment sequence ID -->
 <!-- Find sequence IDs in HubSpot: Automation → Sequences → click on a sequence → check the URL for the ID -->
 
-This is your primary sequence — the one that all leads from paid search, LinkedIn, and Meta are enrolled in. It gets its own dedicated section in the weekly report, separate from the general sequence summary.
+This is your primary sequence - the one that all leads from paid search, LinkedIn, and Meta are enrolled in. It gets its own dedicated section in the weekly report, separate from the general sequence summary.
 
 **Priority sequence reporting includes:**
 - Total leads enrolled this week, broken out by original source (paid search, LinkedIn, Meta, organic, direct, referral)
@@ -71,13 +71,13 @@ Query all EMAIL objects where `hs_sequence_id` has a value AND `hs_timestamp` is
 **For each email, pull:**
 - `hs_object_id` (email ID)
 - `hs_sequence_id` (which sequence)
-- `hs_email_subject` (subject line — reveals the step/template)
+- `hs_email_subject` (subject line - reveals the step/template)
 - `hs_email_status` (SENT, BOUNCED, FAILED, etc.)
 - `hs_email_direction` (should be FORWARDED_EMAIL or EMAIL for outbound)
 - `hs_email_open_count` (number of opens)
 - `hs_email_reply_count` (number of replies)
-- `hs_email_open_rate` (open rate — 100% if opened, 0% if not)
-- `hs_email_reply_rate` (reply rate — 100% if replied, 0% if not)
+- `hs_email_open_rate` (open rate - 100% if opened, 0% if not)
+- `hs_email_reply_rate` (reply rate - 100% if replied, 0% if not)
 - `hs_timestamp` (when sent)
 - `hs_email_to_email` (recipient email)
 - `hubspot_owner_id` (which rep sent it)
@@ -104,8 +104,8 @@ Query all contacts currently enrolled in sequences, plus contacts whose enrollme
 - Properties: same as above, plus `hs_latest_sequence_ended_date`
 
 **For each contact, also pull:**
-- Original source (`hs_analytics_source` + `hs_analytics_source_data_1`) — to understand which channels feed into sequences
-- Associated deal (if any) — to connect sequence activity to pipeline
+- Original source (`hs_analytics_source` + `hs_analytics_source_data_1`) - to understand which channels feed into sequences
+- Associated deal (if any) - to connect sequence activity to pipeline
 - Lifecycle stage
 - ICP tier (if available from `directives/attribution.md` outputs)
 
@@ -141,7 +141,7 @@ Query all contacts currently enrolled in sequences, plus contacts whose enrollme
 
 **Source metrics (from contact enrollment data):**
 - For each original source channel: how many contacts from that source are enrolled in sequences
-- Reply rate by source — do leads from paid search respond better than leads from LinkedIn?
+- Reply rate by source - do leads from paid search respond better than leads from LinkedIn?
 
 **Priority sequence gets all of the above calculated separately** in addition to being included in the overall totals.
 
@@ -196,11 +196,11 @@ On first run, save snapshot and skip change detection.
 
 **General sequence section (follows priority sequence):**
 - **Sequence health summary:** Total emails sent, overall open rate, overall reply rate, bounce rate across all sequences
-- **Sequence-by-sequence breakdown:** Each active sequence's performance — sends, opens, replies, and trend vs. last week
+- **Sequence-by-sequence breakdown:** Each active sequence's performance - sends, opens, replies, and trend vs. last week
 - **Step-level analysis:** Within each sequence, which steps are performing well and which are losing engagement
 - **Rep performance:** Which reps have the best reply rates on their sequences
 - **Best performing email:** The specific email step with the highest reply rate this week
-- **Worst performing email:** The specific email step with the lowest open rate — recommendation to rewrite or remove
+- **Worst performing email:** The specific email step with the lowest open rate - recommendation to rewrite or remove
 - **Enrollment health:** How many contacts are currently enrolled, how many completed, is the pipeline growing or shrinking
 
 **For Section 3 (Cross-Vertical Summary):**
@@ -228,5 +228,5 @@ On first run, save snapshot and skip change detection.
 
 ## Scripts This Directive Feeds
 
-- `execution/email_sequence_pull.py` — Steps 1, 2, 3, 4, and 5
-- `execution/analyze.py` — All reporting
+- `execution/email_sequence_pull.py` - Steps 1, 2, 3, 4, and 5
+- `execution/analyze.py` - All reporting

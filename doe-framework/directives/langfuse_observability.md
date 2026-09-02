@@ -1,7 +1,7 @@
 # Langfuse Observability
 
 ## Goal
-Every Claude API call made by `execution/analyze.py` should be traced in Langfuse. Each weekly run should appear as a single trace containing all 12–13 analysis calls as nested generations. Every generation captures the input prompt, output text, token counts, cost, and latency automatically. This gives you a permanent, searchable record of every analysis the system has ever produced, with cost and performance data over time.
+Every Claude API call made by `execution/analyze.py` should be traced in Langfuse. Each weekly run should appear as a single trace containing all 12-13 analysis calls as nested generations. Every generation captures the input prompt, output text, token counts, cost, and latency automatically. This gives you a permanent, searchable record of every analysis the system has ever produced, with cost and performance data over time.
 
 ---
 
@@ -31,7 +31,7 @@ Use `https://cloud.langfuse.com` if you are on the EU region.
 ```bash
 pip install langfuse
 ```
-Add `langfuse>=2.0.0` to `requirements.txt`.
+Add `langfuse>=4.0.0` to `requirements.txt`.
 
 ---
 
@@ -41,24 +41,19 @@ Build `execution/langfuse_client.py`. This file is imported by `analyze.py` - it
 
 **What this file must contain:**
 
-**1. A Langfuse instance** initialized from environment variables:
+**1. A Langfuse client instance** initialized using `get_client()`:
 ```python
-from langfuse import Langfuse
-import os
+from langfuse import get_client
 
-langfuse = Langfuse(
-    secret_key=os.environ["LANGFUSE_SECRET_KEY"],
-    public_key=os.environ["LANGFUSE_PUBLIC_KEY"],
-    host=os.environ.get("LANGFUSE_HOST", "https://us.cloud.langfuse.com"),
-)
+# Automatically picks up LANGFUSE_SECRET_KEY, LANGFUSE_PUBLIC_KEY, and LANGFUSE_HOST / LANGFUSE_BASE_URL
+langfuse = get_client()
 ```
 
-**2. A `call_claude` wrapper function** with this exact signature:
+**2. A `call_claude` wrapper function** with this signature:
 ```python
 def call_claude(
     *,
     client,           # the Anthropic client instance
-    trace,            # the active Langfuse trace for this run
     call_name: str,   # e.g. "call_1_keyword_intelligence"
     model: str,
     system: str,
@@ -69,11 +64,21 @@ def call_claude(
 ```
 
 **What `call_claude` must do:**
-1. Open a Langfuse generation span using `trace.generation(name=call_name, model=model, model_parameters={...}, input={...})`
-2. Call `client.messages.create(...)` with all parameters
-3. Extract the response text from `response.content[0].text`
-4. Call `generation.end(output=text, usage={"input": response.usage.input_tokens, "output": response.usage.output_tokens, "unit": "TOKENS"})`
+1. Open a Langfuse generation observation:
+   ```python
+   with langfuse.start_as_current_observation(
+       as_type="generation",
+       name=call_name,
+       model=model,
+       input={"system": system, "messages": messages},
+   ) as generation:
+   ```
+2. Call `client.messages.create(...)` with all parameters (omitting `temperature` if `None`)
+3. Extract response text from `response.content[0].text`
+4. Update the generation: `generation.update(output=text, usage_details={"input": response.usage.input_tokens, "output": response.usage.output_tokens})`
 5. Return the response text
+
+> **Note on Langfuse SDK v4+:** Langfuse SDK v4+ is built on OpenTelemetry. Child observations created inside a trace context automatically inherit the trace hierarchy without manually passing a `trace` object around.
 
 The function should let all Anthropic API exceptions propagate naturally - do not swallow errors here. Error handling lives in `analyze.py`.
 
@@ -96,16 +101,18 @@ from langfuse_client import langfuse, call_claude, flush
 import datetime
 ```
 
-**At the start of the analysis run (before any Claude calls):**
+**Wrap the analysis run inside a parent observation trace:**
 ```python
 run_date = datetime.date.today().isoformat()  # e.g. "2026-08-31"
 
-trace = langfuse.trace(
+with langfuse.start_as_current_observation(
+    as_type="trace",
     name="doe_weekly_run",
     session_id=f"weekly-{run_date}",
     metadata={"run_date": run_date},
     tags=["weekly", "doe-framework"],
-)
+):
+    # Replace every client.messages.create(...) call with call_claude(...)
 ```
 
 **Replace every `client.messages.create(...)` call** with `call_claude(...)`:
@@ -123,7 +130,6 @@ text = response.content[0].text
 # After:
 text = call_claude(
     client=client,
-    trace=trace,
     call_name="call_1_keyword_intelligence",
     model=MODEL_DEFAULT,
     system=SYSTEM_PROMPT,
@@ -162,7 +168,7 @@ finally:
 
 **Traces view (`/traces`):**
 - One row per weekly run, named `doe_weekly_run`
-- Click any row → see all 12–13 Claude calls nested inside it as generations
+- Click any row → see all 12-13 Claude calls nested inside it as generations
 - Each generation shows: input prompt, full output text, input tokens, output tokens, cost (auto-calculated by Langfuse), latency in ms
 
 **Dashboard (`/dashboard`):**
@@ -178,10 +184,10 @@ finally:
 
 ## Edge Cases and Notes
 
-- **If Langfuse is unreachable:** The `call_claude` wrapper should still return the Claude response. A Langfuse connection failure should never crash the weekly run. Wrap the `trace.generation()` and `generation.end()` calls in a try/except that logs a warning but does not raise.
+- **If Langfuse is unreachable:** The `call_claude` wrapper should still return the Claude response. A Langfuse connection failure should never crash the weekly run. Wrap the `start_as_current_observation()` and `generation.update()` calls in a try/except that logs a warning but does not raise.
 - **Cost calculation:** Langfuse auto-calculates cost from token counts if the model is in its price list. If you are using a new Claude model that is not yet in Langfuse's list, add a model definition manually at `cloud.langfuse.com → Settings → Models`.
 - **Temperature=None for Call 11:** The cross-vertical summary call omits `temperature` to let the model use its default. Pass `temperature=None` to `call_claude` and have the wrapper omit the parameter from the Anthropic call when it is `None`.
-- **First run:** No historical data to compare against. This is expected. The dashboard will be sparse until you have 2–3 runs.
+- **First run:** No historical data to compare against. This is expected. The dashboard will be sparse until you have 2-3 runs.
 
 ---
 
@@ -189,7 +195,7 @@ finally:
 
 No files are written to `.tmp/`. All output is sent to your Langfuse project at the host configured in `.env`.
 
-To verify the integration is working after the first run: log into Langfuse, go to **Traces**, and confirm you see a `doe_weekly_run` trace with 12–13 nested generations.
+To verify the integration is working after the first run: log into Langfuse, go to **Traces**, and confirm you see a `doe_weekly_run` trace with 12-13 nested generations.
 
 ---
 

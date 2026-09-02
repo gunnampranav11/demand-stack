@@ -1,7 +1,7 @@
 # GBP Competitive Analysis
 
 ## Goal
-Every two weeks, scrape Google Business Profiles for your company and all major competitors. Analyze across 7 sub-modules: category and attributes audit, posts strategy, outlier identification, review framework, photo plan, services section optimization, and description optimization. Produce directly actionable recommendations — not generic SEO advice. Every recommendation must cite specific competitor evidence.
+Every two weeks, scrape Google Business Profiles for your company and all major competitors. Analyze across 7 sub-modules: category and attributes audit, posts strategy, outlier identification, review framework, photo plan, services section optimization, and description optimization. Produce directly actionable recommendations - not generic SEO advice. Every recommendation must cite specific competitor evidence.
 
 ---
 
@@ -96,7 +96,7 @@ For each listing, extract:
 - All attributes set (if available)
 - Compare your company's categories against every competitor's
 
-If attributes data is not returned by the actor, note this in the output and skip the attributes comparison. The category comparison still runs — categories are reliably returned.
+If attributes data is not returned by the actor, note this in the output and skip the attributes comparison. The category comparison still runs - categories are reliably returned.
 
 **Save to:** `.tmp/gbp_categories.csv`
 
@@ -142,7 +142,7 @@ Photo type classification (interior, exterior, product, team, logo) is NOT avail
 For each listing, extract:
 - All service names listed
 
-Service descriptions are typically NOT returned by the scraper — only service names. The analysis layer will write recommended descriptions based on the service names competitors have listed and ICP keywords from `config/icp_taxonomy.py`.
+Service descriptions are typically NOT returned by the scraper - only service names. The analysis layer will write recommended descriptions based on the service names competitors have listed and ICP keywords from `config/icp_taxonomy.py`.
 
 **Save to:** `.tmp/gbp_services.csv`
 
@@ -180,13 +180,13 @@ The analysis layer (`execution/analyze.py` using Claude API) processes each sub-
 - Compare your company's primary category against competitors
 - Identify what categories competitors are using that you are not
 - If attributes data is available: identify what attributes competitors have set that you have not
-- Produce specific recommendations: "Change primary category from '[current category]' to '[recommended category]' — [N] of [total] competitors use this category"
+- Produce specific recommendations: "Change primary category from '[current category]' to '[recommended category]' - [N] of [total] competitors use this category"
 
 **Sub-Module 2: Posts Strategy**
 - If post data is available: analyze competitor posting frequency and content themes, identify which competitors post regularly vs. not at all
 - If post data is not available: produce the posting calendar based on GBP best practices and ICP vertical relevance
 - Produce an 8-week posting calendar with specific post topics, full draft copy, and recommended post type for each
-- Posts must be directly relevant to your ICP verticals — not generic company updates
+- Posts must be directly relevant to your ICP verticals - not generic company updates
 - **Output format:** Calendar format with week number, post date, topic, full copy, post type, target vertical
 
 **Sub-Module 3: Outlier Identification**
@@ -219,11 +219,11 @@ The analysis layer (`execution/analyze.py` using Claude API) processes each sub-
 - Note which competitors have no description set
 - Produce 3 versions of an optimized GBP description for A/B testing
 - Each version should emphasize a different angle (e.g., version 1 = primary vertical focus, version 2 = broad product, version 3 = accuracy/speed proof points)
-- Include ICP keywords naturally — no keyword stuffing
+- Include ICP keywords naturally - no keyword stuffing
 - **Output format:** 3 full description texts, each labeled with the angle and target vertical
 
 **Top 7 Ranking Levers Table (required in every GBP report):**
-The analysis layer must produce a table summarizing the top 7 ranking levers for your GBP, based on competitor evidence. **Strict table format — no prose, no bullet points.**
+The analysis layer must produce a table summarizing the top 7 ranking levers for your GBP, based on competitor evidence. **Strict table format - no prose, no bullet points.**
 
 | Lever | Evidence from Competitors | Why It Matters |
 |---|---|---|
@@ -234,7 +234,7 @@ The analysis layer must produce a table summarizing the top 7 ranking levers for
 ## Edge Cases and Notes
 
 - **Bi-weekly scheduling:** The orchestrator (`execution/main.py`) must track which Sundays to run this module. Use a simple toggle: check if the last GBP run was more than 12 days ago. If yes, run. If no, skip.
-- **Apify costs:** Searches × 5 max results ≈ place lookups per run. At $4/1,000 places, costs approximately $0.40 per run plus review data. Estimate $1–2/run, or $0.50–1/week averaged over bi-weekly runs.
+- **Apify costs:** Searches × 5 max results ≈ place lookups per run. At $4/1,000 places, costs approximately $0.40 per run plus review data. Estimate $1-2/run, or $0.50-1/week averaged over bi-weekly runs.
 - **GBP listing not found:** Some competitors may not have a GBP listing. The script should filter results by matching the business website URL against known competitor domains from `config/competitor_lists.py`. If no match is found, log it as "no GBP listing found" and skip.
 - **Your company may have multiple listings:** Include searches for both your company name with a city and your company name alone to capture both your US and any international office listings if applicable.
 - **Scraper data limitations:** The Google Maps Scraper reliably returns categories, reviews, photo counts, service names, and descriptions. It may NOT return posts, attributes, photo type classifications, or service descriptions. Each sub-module is designed to handle missing data gracefully.
@@ -245,5 +245,5 @@ The analysis layer must produce a table summarizing the top 7 ranking levers for
 
 ## Scripts This Directive Feeds
 
-- `execution/gbp_scrape.py` — Steps 1 and 2
-- `execution/analyze.py` — All 7 sub-module analyses and ranking levers table
+- `execution/gbp_scrape.py` - Steps 1 and 2
+- `execution/analyze.py` - All 7 sub-module analyses and ranking levers table

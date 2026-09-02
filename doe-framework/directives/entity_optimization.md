@@ -48,19 +48,19 @@ Run the Website Content Crawler (`apify/website-content-crawler`) on all key pag
 - Meta description (`<meta name="description">`)
 
 **Schema types to check for:**
-- `Organization` — company name, logo, URL, social profiles, founding date
-- `LocalBusiness` — address, phone, hours, geo coordinates (relevant if GBP is meant to rank locally)
-- `WebSite` — site name, URL, search action
-- `Product` or `SoftwareApplication` — product descriptions, features, pricing
-- `BreadcrumbList` — navigation structure
-- `FAQPage` — FAQ sections
-- `Article` or `BlogPosting` — blog content
+- `Organization` - company name, logo, URL, social profiles, founding date
+- `LocalBusiness` - address, phone, hours, geo coordinates (relevant if GBP is meant to rank locally)
+- `WebSite` - site name, URL, search action
+- `Product` or `SoftwareApplication` - product descriptions, features, pricing
+- `BreadcrumbList` - navigation structure
+- `FAQPage` - FAQ sections
+- `Article` or `BlogPosting` - blog content
 
 **For each page, record:**
 - Page URL
 - Schema types found (list all)
 - Schema types missing (compared against the recommended set above)
-- Whether the schema is valid JSON-LD (basic syntax check — does it parse as valid JSON?)
+- Whether the schema is valid JSON-LD (basic syntax check - does it parse as valid JSON?)
 - Key fields present or missing within each schema type (e.g., Organization schema exists but is missing `logo` or `sameAs` social links)
 - Open Graph completeness (are all 4 core OG tags present?)
 - Canonical URL present and correct
@@ -116,7 +116,7 @@ Run the Google Search Scraper (`apify/google-search-scraper`) for brand name sea
 - If yes, what information does it show? (Company name, description, logo, website, social profiles, employees, founded date)
 - If no, record as "No Knowledge Graph panel found"
 
-**Note:** The Google Search Scraper may not reliably extract Knowledge Graph data — it depends on the actor's capabilities. If Knowledge Graph data is not returned, the script should record "Knowledge Graph check inconclusive — manual verification recommended" for that search. Do not fail the module over this.
+**Note:** The Google Search Scraper may not reliably extract Knowledge Graph data - it depends on the actor's capabilities. If Knowledge Graph data is not returned, the script should record "Knowledge Graph check inconclusive - manual verification recommended" for that search. Do not fail the module over this.
 
 **Save to:** `.tmp/knowledge_graph_check.csv`
 
@@ -125,7 +125,7 @@ Run the Google Search Scraper (`apify/google-search-scraper`) for brand name sea
 ## Step 4: Brand Consistency Check
 
 **What to do:**
-Using the data already collected in Steps 1–3, plus data from other modules, check for brand consistency issues.
+Using the data already collected in Steps 1-3, plus data from other modules, check for brand consistency issues.
 
 **What to check:**
 - **Company name consistency:** Is your company name spelled consistently across the website, schema markup, GBP listing, G2, Capterra, and LinkedIn? Flag any variations (e.g., different capitalization, abbreviations, legal suffixes)
@@ -136,8 +136,8 @@ Using the data already collected in Steps 1–3, plus data from other modules, c
 - **NAP consistency (Name, Address, Phone):** Are name, address, and phone number consistent across all touchpoints?
 
 **Data sources for this check:**
-- Schema markup data from Steps 1–2
-- GBP data from `.tmp/gbp_raw_data.csv` (from `directives/gbp_analysis.md` — may not exist if GBP hasn't run recently)
+- Schema markup data from Steps 1-2
+- GBP data from `.tmp/gbp_raw_data.csv` (from `directives/gbp_analysis.md` - may not exist if GBP hasn't run recently)
 - LinkedIn data from `.tmp/company_linkedin_page_metrics.csv` (from `directives/linkedin_organic.md`)
 
 If any of these source files don't exist, skip that comparison and note it. The check works with whatever data is available.
@@ -207,7 +207,7 @@ On first run, save snapshot and skip change detection.
 ## Edge Cases and Notes
 
 - **Bi-monthly scheduling:** The orchestrator (`execution/main.py`) must track when this module last ran. Use a simple check: if the last entity check was more than 55 days ago, run. If not, skip. This gives a buffer around the 60-day (bi-monthly) target.
-- **Apify costs:** Your key pages + competitor pages = page crawls + SERP searches. Minimal cost — well under $0.50 per run. Since this runs bi-monthly, the cost is negligible.
+- **Apify costs:** Your key pages + competitor pages = page crawls + SERP searches. Minimal cost - well under $0.50 per run. Since this runs bi-monthly, the cost is negligible.
 - **Website Content Crawler returns text, not raw HTML:** Some Apify website crawlers return cleaned text, not raw HTML. If raw HTML is not available, JSON-LD blocks may not be extractable by the crawler alone. In this case, the script should make direct HTTP requests (using Python's `requests` library) to fetch raw HTML for the JSON-LD extraction, and use the Apify crawler only for content analysis.
 - **JSON-LD parsing:** Use Python's `json` module to parse JSON-LD blocks. If a block fails to parse, flag it as "invalid JSON-LD" and include the raw text in the output for manual review.
 - **Knowledge Graph detection limitations:** The Google Search Scraper may not reliably differentiate Knowledge Graph panels from other SERP features. If the data is ambiguous, flag it for manual verification rather than making assumptions.
@@ -219,5 +219,5 @@ On first run, save snapshot and skip change detection.
 
 ## Scripts This Directive Feeds
 
-- `execution/entity_check.py` — Steps 1, 2, 3, 4, and 5
-- `execution/analyze.py` — All analysis layer reporting
+- `execution/entity_check.py` - Steps 1, 2, 3, 4, and 5
+- `execution/analyze.py` - All analysis layer reporting

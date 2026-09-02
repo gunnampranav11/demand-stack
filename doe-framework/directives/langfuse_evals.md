@@ -90,7 +90,7 @@ promote_to_dataset(
 )
 ```
 
-**Target:** 3–5 dataset items per call, covering meaningfully different scenarios. For example:
+**Target:** 3-5 dataset items per call, covering meaningfully different scenarios. For example:
 - A week with at least one zero-conversion keyword alert
 - A week with a CRITICAL urgency flag in the output
 - A week where GBP data was missing and the output handled it gracefully
@@ -150,9 +150,9 @@ Build `execution/evals/run_evals.py`. This is the main eval script - it replays 
 1. Extract `model`, `system`, `messages` from `item.input`
 2. Call `client.messages.create(...)` directly (not via `call_claude` - this avoids creating production traces during eval runs)
 3. Run all four scorers on the output
-4. Create a Langfuse trace named `f"{dataset_name}/{RUN_NAME}"` with `session_id=RUN_NAME`
-5. Log a generation inside the trace (input, output, token usage)
-6. Attach all four scores to the trace using `trace.score(name=..., value=..., comment=...)`
+4. Create a Langfuse trace observation named `f"{dataset_name}/{RUN_NAME}"` with `session_id=RUN_NAME` using `with langfuse.start_as_current_observation(as_type="trace", name=..., session_id=...) as trace_obs:`
+5. Log a generation inside the trace context (input, output, token usage)
+6. Attach all four scores using `langfuse.score(trace_id=trace_obs.trace_id, name=..., value=..., comment=...)`
 7. Return a dict: `{"item_id": item.id, "scores": {...}, "passed": bool}`
 
 **Score names to use** (must match exactly - Langfuse uses these as metric keys in the dashboard):
@@ -198,7 +198,7 @@ Build `.github/workflows/doe_evals.yml`.
 - `LANGFUSE_PUBLIC_KEY` - from Langfuse project settings
 - `LANGFUSE_HOST` - `https://us.cloud.langfuse.com` or `https://cloud.langfuse.com`
 
-> Note: These eval runs make real Claude API calls. Budget approximately $0.10–$0.30 per CI run depending on how many dataset items you have seeded. Keep your dataset small (3–5 items per call) until you understand your CI cost.
+> Note: These eval runs make real Claude API calls. Budget approximately $0.10-$0.30 per CI run depending on how many dataset items you have seeded. Keep your dataset small (3-5 items per call) until you understand your CI cost.
 
 ---
 
@@ -242,7 +242,7 @@ Passed: 7  |  Failed: 1
 | Trigger | Action |
 |---|---|
 | Any edit to `analyze.py` or a directive | CI runs automatically |
-| Anthropic releases a new Claude version | Run manually + review 2–3 outputs in Langfuse before switching models in `.env` |
+| Anthropic releases a new Claude version | Run manually + review 2-3 outputs in Langfuse before switching models in `.env` |
 | ICP taxonomy changes (`config/icp_taxonomy.py`) | Re-seed `doe-lead-scoring` with a fresh golden example, then run the suite |
 | Weekly production run | No eval run needed - observability traces are captured automatically via `langfuse_observability.md` |
 

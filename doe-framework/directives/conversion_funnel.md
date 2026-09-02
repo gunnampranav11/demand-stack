@@ -1,7 +1,7 @@
 # Website Conversion Funnel Analysis + Landing Page Content Analysis
 
 ## Goal
-Every week, pull website traffic and conversion data from GA4 to map the full visitor-to-conversion funnel. Identify which landing pages convert well and which don't. Cross-reference with Google Ads data to detect mismatches between ad copy promises and landing page content — a key driver of high bounce rates on paid search. Surface specific pages that need attention, not general observations.
+Every week, pull website traffic and conversion data from GA4 to map the full visitor-to-conversion funnel. Identify which landing pages convert well and which don't. Cross-reference with Google Ads data to detect mismatches between ad copy promises and landing page content - a key driver of high bounce rates on paid search. Surface specific pages that need attention, not general observations.
 
 ---
 
@@ -51,8 +51,8 @@ Every week, pull website traffic and conversion data from GA4 to map the full vi
 For each landing page, also pull traffic broken out by source/medium:
 - google / cpc (paid search)
 - google / organic (organic search)
-- linkedin / paid (LinkedIn ads — may appear as linkedin.com / referral or l.linkedin.com / referral)
-- facebook / paid (Meta ads — may appear as facebook.com / referral or l.facebook.com / referral)
+- linkedin / paid (LinkedIn ads - may appear as linkedin.com / referral or l.linkedin.com / referral)
+- facebook / paid (Meta ads - may appear as facebook.com / referral or l.facebook.com / referral)
 - direct / (none)
 - referral sources
 - email
@@ -62,7 +62,7 @@ This allows the analysis layer to compare conversion rates for the same landing 
 **Filters:**
 - Property ID: `[YOUR_GA4_PROPERTY_ID]`
 - Date range: last 7 days
-- All landing pages — pull everything, do not filter
+- All landing pages - pull everything, do not filter
 - GA4 event name spacing: Use exact strings as configured in your GA4 property. Do not normalize.
 
 **Save to:** `.tmp/ga4_conversion_funnel.csv`
@@ -76,11 +76,11 @@ Map each landing page into a funnel stage based on the URL path:
 
 | URL pattern | Funnel stage |
 |---|---|
-| `/` (homepage) | Top of Funnel — Awareness |
-| `/blog/*` or `/resources/*` | Top of Funnel — Education |
-| `/[solution-page-1]`, `/[solution-page-2]` | Mid Funnel — Solution |
-| `/vs-*` or `/compare-*` or any comparison page | Mid Funnel — Evaluation |
-| `/demo`, `/contact`, `/schedule`, `/pricing` | Bottom Funnel — Conversion |
+| `/` (homepage) | Top of Funnel - Awareness |
+| `/blog/*` or `/resources/*` | Top of Funnel - Education |
+| `/[solution-page-1]`, `/[solution-page-2]` | Mid Funnel - Solution |
+| `/vs-*` or `/compare-*` or any comparison page | Mid Funnel - Evaluation |
+| `/demo`, `/contact`, `/schedule`, `/pricing` | Bottom Funnel - Conversion |
 | `/thank-you`, `/confirmation` | Post-Conversion |
 | Everything else | Uncategorized |
 
@@ -95,7 +95,7 @@ Map each landing page into a funnel stage based on the URL path:
 **What to flag:**
 - Any landing page with more than 50 sessions in the 7-day window and 0 total conversions across all active events
 - Any landing page with more than 100 sessions and a conversion rate below 0.5%
-- Any landing page where paid search (google / cpc) sessions are more than 20 but conversions are 0 — this directly indicates wasted Google Ads spend
+- Any landing page where paid search (google / cpc) sessions are more than 20 but conversions are 0 - this directly indicates wasted Google Ads spend
 - Any landing page with a bounce rate above 80% and more than 30 sessions
 
 **For each flagged page, record:**
@@ -103,7 +103,7 @@ Map each landing page into a funnel stage based on the URL path:
 - Sessions (total and by source)
 - Bounce rate
 - Conversion rate
-- Estimated wasted spend (if paid search — cross-reference with `.tmp/google_ads_keywords.csv` to estimate how much was spent driving traffic to this page)
+- Estimated wasted spend (if paid search - cross-reference with `.tmp/google_ads_keywords.csv` to estimate how much was spent driving traffic to this page)
 - Flag type: "zero-conversion", "low-conversion", "paid-zero-conversion", or "high-bounce"
 
 **Save to:** `.tmp/flagged_landing_pages.csv`
@@ -118,9 +118,9 @@ Crawl the actual content of flagged landing pages and top-traffic paid search la
 **Pages to crawl:**
 1. All pages flagged in Step 3 (zero-conversion or low-conversion)
 2. The top 10 landing pages by paid search (google / cpc) sessions, regardless of conversion rate
-3. Deduplicate — if a page appears in both lists, crawl it once
+3. Deduplicate - if a page appears in both lists, crawl it once
 
-This should result in approximately 10–20 pages per week.
+This should result in approximately 10-20 pages per week.
 
 **Run the Website Content Crawler (`apify/website-content-crawler`) on each page. For each crawled page, extract:**
 - Full URL
@@ -206,11 +206,11 @@ On first run, save snapshot and skip change detection.
 
 ## Edge Cases and Notes
 
-- **GA4 data delay:** GA4 data may be delayed by 24–48 hours. The most recent 1–2 days in the 7-day window may show incomplete data. This is normal and acceptable.
-- **GA4 event name spacing:** Some GA4 event names may have unusual internal spacing or formatting — use the exact strings as configured in your GA4 property. Do not normalize.
+- **GA4 data delay:** GA4 data may be delayed by 24-48 hours. The most recent 1-2 days in the 7-day window may show incomplete data. This is normal and acceptable.
+- **GA4 event name spacing:** Some GA4 event names may have unusual internal spacing or formatting - use the exact strings as configured in your GA4 property. Do not normalize.
 - **Source/medium mapping:** LinkedIn and Meta traffic may appear under various source/medium combinations depending on UTM tagging. Common patterns: `linkedin.com / referral`, `l.linkedin.com / referral`, `facebook.com / referral`, `l.facebook.com / referral`. The script should group these by platform (LinkedIn, Meta, Google, Direct, Email, Other) as an additional column.
 - **Landing page URL normalization:** GA4 reports landing page paths (e.g., `/demo`), not full URLs. The script should normalize by removing trailing slashes and query parameters so that `/demo`, `/demo/`, and `/demo?utm_source=google` are treated as the same page.
-- **Apify costs for landing page crawl:** Approximately 10–20 pages per week at minimal cost (well under $0.10/week).
+- **Apify costs for landing page crawl:** Approximately 10-20 pages per week at minimal cost (well under $0.10/week).
 - **Website Content Crawler failures:** Some pages may block crawling. If a page fails to crawl, log it as "content unavailable" and continue. The analysis layer will note that ad-landing page mismatch analysis was not possible for that page.
 - **Google Ads final URL:** Not all Google Ads keyword reports include the final URL. If the final URL is not available at the keyword level, pull ad-group-level or campaign-level final URLs as a fallback.
 - **Dependency on keyword intelligence data:** Step 5 requires `.tmp/google_ads_keywords.csv` from `directives/keyword_intelligence.md`. The orchestrator must ensure that directive's scripts run before this module's scripts.
@@ -221,6 +221,6 @@ On first run, save snapshot and skip change detection.
 
 ## Scripts This Directive Feeds
 
-- `execution/ga4_pull.py` — Step 1
-- `execution/conversion_funnel_pull.py` — Steps 2, 3, 5, and 6
-- `execution/analyze.py` — Ad copy vs. landing page mismatch analysis (Step 4 content + Step 5 matching) and all reporting
+- `execution/ga4_pull.py` - Step 1
+- `execution/conversion_funnel_pull.py` - Steps 2, 3, 5, and 6
+- `execution/analyze.py` - Ad copy vs. landing page mismatch analysis (Step 4 content + Step 5 matching) and all reporting
